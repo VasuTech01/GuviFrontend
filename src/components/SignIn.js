@@ -4,19 +4,29 @@ import { userSignIn } from '../util/UserOps';
 import { getData,setData } from '../util/LocalStorage';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import validator from "validator";
 function SignIn(props) {
     const [userData, setUserData] = useState({ email: "", password: "" });
     const validateUserData = () => {
-        return userData.email.length > 0 ? userData.password.length >=8 ? true : false : false;
+        if (!validator.isEmail(userData.email)) {
+            return false;     
+        }
+        if (userData.password.length < 8) {
+            return false;
+        }
+        return true;
+        
    }
     const SignUserin =async () => {
         
         try {
-            console.log(userData);
-          
-            const res = validateUserData() === true ? await userSignIn(userData) : { success: false, error: "check Entered Data" };
-            console.log(res);
+           
+            if (!validateUserData()) {
+                throw new Error("Enter Valid Data"); 
+               }
+            const res =  await userSignIn(userData)
             if (res.success === false) {
+                
                 throw new Error(res.error);
             }
            
@@ -25,8 +35,8 @@ function SignIn(props) {
             props.setView(0);
             props.setUserView(true);
         }catch (e) {
-            console.log(e);
            
+            toast(e.message+"🧨", { autoClose: true });
             setUserData({
                 email: "",
                 password: "",
@@ -44,9 +54,9 @@ function SignIn(props) {
           </div>
           <div className="form_body" style={{height:"60%"}}>
               <div className="form_fields">
-                  <input className="form_input" value={userData.email} onChange={(e) => {
+                  <input type="email" className="form_input" value={userData.email} onChange={(e) => {
                       setUserData({...userData,email:e.target.value})
-              }} type="email"/> 
+              }} /> 
               <p className="formLabels">Email</p>
               </div>
               <div className="form_fields">

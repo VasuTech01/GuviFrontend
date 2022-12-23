@@ -3,6 +3,7 @@ import "./style/form.css";
 import { userSignUp } from "../util/UserOps";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import validator from "validator";
 function SignUp(props) {
   const [userData, setUserData] = useState({
     username: "",
@@ -11,13 +12,19 @@ function SignUp(props) {
   });
     const [cfPwd, setcfPwd] = useState("");
     const validateUser=()=>{
-        const l = userData.password.length===cfPwd.length?userData.password.match(cfPwd)?true:false:false;
-        return l;
+      var isMail = validator.isEmail(userData.email);
+      var matching = userData.password.length > 8 ? userData.password===(cfPwd)? true : false : false;
+      return isMail && matching;
     }
 
   const CreatUser = async () => {
     try {
-        const res = validateUser()===true? await userSignUp(userData):{success:false,error:"Validation Error"};
+    
+      if (!validateUser()) {
+        throw new Error("Enter Valid Data");
+      }
+      const res = await userSignUp(userData);
+      
         if (!res.success) {
             throw new Error(res.error);
         }
@@ -28,15 +35,15 @@ function SignUp(props) {
       props.setView(0);
       props.setUserView(true);
     } catch (e) {
-        console.log(e);
-       
+     
+      toast(e.message+"🧨",{autoClose:true});
         setUserData({
             username: "",
             email: "",
             password: "",
         });
         setcfPwd("");
-        props.setView(0);
+        // props.setView(0);
     }
   };
 
@@ -97,7 +104,8 @@ function SignUp(props) {
         <button className="form_btn" onClick={CreatUser}>
           Sign Up
         </button>
-          </div>
+      </div>
+      <ToastContainer/>
     </center>
   );
 }

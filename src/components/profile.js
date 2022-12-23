@@ -17,7 +17,6 @@ function Profile(props) {
     useEffect(() => {
         var user = window.sessionStorage.getItem("user");
         user = JSON.parse(user);
-        console.log("f",user)
         const { username, email, age, dob, address, mobile } = user;
         userName!==username && setUsername(username)
         useremail!==email && setEmail(email);
@@ -46,21 +45,20 @@ function Profile(props) {
      }
     const updateHandle =async ()=>{
         const data = allowedUpdate();
-        console.log("values to be updated",data);
+       
         try {
             const res = await userUpdate(data);
-            console.log("updated response",res);
+          
             if (res.success === false) {
                 throw new Error(res.error);
             }
             toast("User Updated",{autoClose:true});
             const { username, email, age, dob, address, mobile } = res.data;
-            console.log("updated boy", res.data);
+            
             const user=JSON.stringify({username, age, email, dob, mobile, address })
             window.sessionStorage.setItem("user", user);
             props.setUserData({ username, email, dob, address, mobile,age });
         } catch (e) {
-            console.log(e.message);
             toast("user Not Updated",{autoClose:true});
      }
     }
@@ -68,7 +66,6 @@ function Profile(props) {
         try {
 
             const res = await userLogout();
-            console.log(res);
             if (res.success === false) {
                 throw new Error(res.error);
             }

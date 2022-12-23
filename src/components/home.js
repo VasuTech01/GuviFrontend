@@ -17,13 +17,13 @@ function Home() {
   ];
   const userView = () => {
     const k = getData("token");
-    if (k == null) {
+    if (k === null||k==="null") {
       setUserView(false);
       return;
     }
     setUserView(true);
     var user = window.sessionStorage.getItem("user");
-    if (!user) {
+    if (user==='null'||  (!user)) {
       setUserData({ username: "", age: "", email: "", dob: "", mobile: "", address: "" });
       return;
     }

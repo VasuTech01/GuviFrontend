@@ -11,9 +11,9 @@ export const userSignUp = async (userData) => {
         },
         responseType: "json",
       });
-      console.log(res);
-      if (!res) {
-        throw new Error();
+
+      if (res.data.error) {
+        resolve({success:false,error:"User already Exist"});
       }
       setData("token", res.data.token);
       resolve({ success: true, data: res.data.user });
@@ -24,7 +24,6 @@ export const userSignUp = async (userData) => {
 };
 export const userSignIn = async (userData) => {
   return new Promise(async (resolve, reject) => {
-    console.log(userData);
     try {
       const res = await axios(url + "user/login", {
         method: "post",
@@ -33,13 +32,15 @@ export const userSignIn = async (userData) => {
         },
         responseType: "json",
       });
-      console.log(res);
+     
       if (res.data.error) {
-        throw new Error(res.data.error);
+       
+        resolve({ success: false, error: res.data.error });
       }
       setData("token", res.data.token);
       resolve({ success: true, data: res.data.user });
     } catch (e) {
+      
       reject({ success: false, error: e.message });
     }
   });
@@ -61,7 +62,7 @@ export const userLogout = async () => {
       setData("token", null);    
       resolve({ success: true, data: "User Loged Out" });
     } catch (e) {
-      console.log(e.message);
+     
       reject({ success: false, error: e.message });
     }
   });
@@ -80,14 +81,14 @@ export const userUpdate = async (userData) => {
                 },
                 responseType:"json",
             })
-            console.log("updated", res);
+           
             if (res.status!==200) {
                 throw new Error("User Not Updated");
             }
-            console.log(res);
+           
             resolve({ success: true, data: res.data.user });
         } catch (e) {
-            console.log(e);
+
             reject({ success: false, error: e.message });
         }
     })
