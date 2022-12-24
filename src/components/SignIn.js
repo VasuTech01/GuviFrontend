@@ -49,8 +49,6 @@ function SignIn(props) {
     <center className="form_cont">
           <div className="form_head"  style={{height:"10%"}}>
               <h2>User Login</h2>
-              {userData.email}
-              {userData.password}
           </div>
           <div className="form_body" style={{height:"60%"}}>
               <div className="form_fields">

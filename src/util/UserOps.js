@@ -1,6 +1,6 @@
 import { setData, getData } from "./LocalStorage";
 import axios from "axios";
-const url = "http://localhost:5000/";
+const url = "https://healthy-red-culottes.cyclic.app/";
 export const userSignUp = async (userData) => {
   return new Promise(async (resolve, rej) => {
     try {
